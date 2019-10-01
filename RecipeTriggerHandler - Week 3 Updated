@@ -1,0 +1,46 @@
+public class RecipeTriggerHandler {
+
+// -----------Trigger Handler Class Variables -----------------------------------------------
+List<Recipe__c> newRecipes;
+Map<ID, Recipe__c> oldRecipeMap;
+    
+// Constructor receives the accounts being processed by this trigger and assigns them to class variables
+    public RecipeTriggerHandler (List<Recipe__c> newRecipes, Map<ID, Recipe__c> oldRecipeMap) {
+        this.newRecipes = newRecipes;
+        this.oldRecipeMap = oldRecipeMap;
+    }
+    
+    
+    //before insert method
+    public void handleBeforeInsert(){
+        setDuration();
+        //this is a before trigger, so our handler doesn't have to call DML
+        
+    }
+        
+    //after insert method
+    //this is not used in week 3 homework. Leaving in trigger to maintain 'else if' pattern
+    public void handleAfterInsert(){
+        
+    }
+        
+    //after update method
+    public void handleBeforeUpdate(){
+        setDuration();
+        }
+    
+    //put common code in its own method. Best practice and less places to update if requirements change.
+    public void setDuration() {
+        for (Recipe__c r : this.newRecipes) {
+            if (r.Active_Time__c <= 30) {
+                r.Duration__c = 'Quick';
+            } else if (r.Active_Time__c > 30 && r.Active_Time__c <= 60) {
+                r.Duration__c = 'Medium';
+            } else if (r.Active_Time__c > 60) {
+                r.Duration__c = 'Long';
+            } else {
+                r.Duration__c = '';
+            }
+    }
+    }
+}
